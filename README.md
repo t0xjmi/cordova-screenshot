@@ -1,3 +1,7 @@
+This is a fork from https://github.com/gitawego/cordova-screenshot.git
+
+Modified to fix a iOS 8 orientation issue
+
 cordova-screenshot
 ==================
 
