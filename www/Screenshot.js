@@ -30,5 +30,18 @@ module.exports = {
 			callback && callback(error);
 		}, "Screenshot", "getScreenshotAsURI", [quality]);
 
+	},
+	saveTimeline: function (callback, format, quality, filename) {
+	    format = (format || 'png').toLowerCase();
+	    filename = filename || 'screenshot_' + Math.round((+(new Date()) + Math.random()));
+	    if (formats.indexOf(format) === -1) {
+	        return callback && callback(new Error('invalid format ' + format));
+	    }
+	    quality = typeof (quality) !== 'number' ? 100 : quality;
+	    exec(function (res) {
+	        callback && callback(null, res);
+	    }, function (error) {
+	        callback && callback(error);
+	    }, "Screenshot", "saveScreenshotTimeline", [format, quality, filename]);
 	}
 };
