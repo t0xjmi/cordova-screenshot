@@ -78,4 +78,59 @@
 	[self writeJavascript:[pluginResult toSuccessCallbackString:command.callbackId]];
 }
 
+ - (void)saveScreenshotTimeline:(CDVInvokedUrlCommand*)command
+{
+	NSString *filename = [command.arguments objectAtIndex:2];
+	NSNumber *quality = [command.arguments objectAtIndex:1];
+	NSString *path = [NSString stringWithFormat:@"%@.jpg",filename];
+
+	NSString *jpgPath = [NSTemporaryDirectory() stringByAppendingPathComponent:path ];
+
+	CGRect imageRect;
+	CGRect screenRect = [[UIScreen mainScreen] bounds];
+
+	// statusBarOrientation is more reliable than UIDevice.orientation
+	UIInterfaceOrientation orientation = [UIApplication sharedApplication].statusBarOrientation;
+
+	if (([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0)) {
+		imageRect = CGRectMake(0, 0, 1024, 135 + 140);
+	} else {
+	    if (orientation == UIInterfaceOrientationLandscapeLeft || orientation == UIInterfaceOrientationLandscapeRight) {
+	        // landscape check
+			imageRect = CGRectMake(0, 0, 135 + 140, 1024);
+	    } else {
+	        // portrait check
+			imageRect = CGRectMake(0, 0, 1024, 135 + 140);
+	    }
+	}
+
+	CGContextRef ctx = UIGraphicsGetCurrentContext();
+	[[UIColor blackColor] set];
+	CGContextTranslateCTM(ctx, 0, 0);
+	CGContextFillRect(ctx, imageRect);
+	
+    if ([webView respondsToSelector:@selector(drawViewHierarchyInRect:afterScreenUpdates:)]) {
+        [webView drawViewHierarchyInRect:webView.bounds afterScreenUpdates:YES];
+    } else {
+        [webView.layer renderInContext:ctx];
+    }
+
+	UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+	NSData *imageData = UIImageJPEGRepresentation(image,[quality floatValue]);
+	[imageData writeToFile:jpgPath atomically:NO];
+
+	UIGraphicsEndImageContext();
+
+	CDVPluginResult* pluginResult = nil;
+	NSDictionary *jsonObj = [ [NSDictionary alloc]
+		initWithObjectsAndKeys :
+		jpgPath, @"filePath",
+		@"true", @"success",
+		nil
+		];
+
+	pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:jsonObj];
+	[self writeJavascript:[pluginResult toSuccessCallbackString:command.callbackId]];
+}
+
 @end
