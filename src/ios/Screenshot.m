@@ -93,14 +93,14 @@
 	UIInterfaceOrientation orientation = [UIApplication sharedApplication].statusBarOrientation;
 
 	if (([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0)) {
-		imageRect = CGRectMake(0, 0, 1024, 135 + 140);
+		imageRect = CGRectMake(0, 0, 1024, 275);
 	} else {
 	    if (orientation == UIInterfaceOrientationLandscapeLeft || orientation == UIInterfaceOrientationLandscapeRight) {
 	        // landscape check
-			imageRect = CGRectMake(0, 0, 135 + 140, 1024);
+			imageRect = CGRectMake(0, 0, 275, 1024);
 	    } else {
 	        // portrait check
-			imageRect = CGRectMake(0, 0, 1024, 135 + 140);
+			imageRect = CGRectMake(0, 0, 1024, 275);
 	    }
 	}
 	
