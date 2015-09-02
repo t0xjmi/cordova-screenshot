@@ -31,7 +31,7 @@ module.exports = {
 		}, "Screenshot", "getScreenshotAsURI", [quality]);
 
 	},
-	saveTimeline: function (callback, format, quality, filename) {
+	saveSize: function (callback, format, quality, filename, width, height) {
 	    format = (format || 'png').toLowerCase();
 	    filename = filename || 'screenshot_' + Math.round((+(new Date()) + Math.random()));
 	    if (formats.indexOf(format) === -1) {
@@ -42,6 +42,6 @@ module.exports = {
 	        callback && callback(null, res);
 	    }, function (error) {
 	        callback && callback(error);
-	    }, "Screenshot", "saveScreenshotTimeline", [format, quality, filename]);
+	    }, "Screenshot", "saveScreenshotSize", [format, quality, filename, width, height]);
 	}
 };
