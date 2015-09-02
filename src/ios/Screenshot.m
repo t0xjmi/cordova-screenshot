@@ -49,6 +49,8 @@
 	else
 		UIGraphicsBeginImageContext(imageRect.size);
 
+	NSLog(@"!!!!!");
+
 	CGContextRef ctx = UIGraphicsGetCurrentContext();
 	[[UIColor blackColor] set];
 	CGContextTranslateCTM(ctx, 0, 0);
@@ -78,11 +80,13 @@
 	[self writeJavascript:[pluginResult toSuccessCallbackString:command.callbackId]];
 }
 
- - (void)saveScreenshotTimeline:(CDVInvokedUrlCommand*)command
+ - (void)saveScreenshotSize:(CDVInvokedUrlCommand*)command
 {
 	NSString *filename = [command.arguments objectAtIndex:2];
 	NSNumber *quality = [command.arguments objectAtIndex:1];
 	NSString *path = [NSString stringWithFormat:@"%@.jpg",filename];
+	NSNumber *width = [command.arguments objectAtIndex:3];
+	NSNumber *height = [command.arguments objectAtIndex:4];
 
 	NSString *jpgPath = [NSTemporaryDirectory() stringByAppendingPathComponent:path ];
 
@@ -93,14 +97,14 @@
 	UIInterfaceOrientation orientation = [UIApplication sharedApplication].statusBarOrientation;
 
 	if (([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0)) {
-		imageRect = CGRectMake(0, 0, 1024, 275);
+		imageRect = CGRectMake(0, 0, [width floatValue], [height floatValue]);
 	} else {
 	    if (orientation == UIInterfaceOrientationLandscapeLeft || orientation == UIInterfaceOrientationLandscapeRight) {
 	        // landscape check
-			imageRect = CGRectMake(0, 0, 275, 1024);
+			imageRect = CGRectMake(0, 0, [height floatValue], [width floatValue]);
 	    } else {
 	        // portrait check
-			imageRect = CGRectMake(0, 0, 1024, 275);
+			imageRect = CGRectMake(0, 0, [width floatValue], [height floatValue]);
 	    }
 	}
 	
@@ -109,6 +113,8 @@
 		UIGraphicsBeginImageContextWithOptions(imageRect.size, NO, 0);
 	else
 		UIGraphicsBeginImageContext(imageRect.size);
+
+	//NSLog(@"!!!!!");
 
 	CGContextRef ctx = UIGraphicsGetCurrentContext();
 	[[UIColor blackColor] set];
